@@ -1,0 +1,43 @@
+class CountSort {
+    Integer[] arr;
+    int maxNum;
+    public CountSort(Integer[] toSort,int maxNum) {
+        this.arr = toSort;
+        this.maxNum = maxNum;
+    }
+    public CountSort() {
+        this.maxNum = maxNum;
+    }
+    public void setArr(Integer[] arr) {
+        this.arr = arr;
+    }
+    public void setMax(int maxNum) {
+        this.maxNum = maxNum;
+    }
+    /**
+    */
+    public Integer[] sort() {
+        int[] count = new int[maxNum];
+        Integer[] b = new Integer[arr.length];
+        for(int i=0;i<arr.length;i++) {
+            count[arr[i]]++;
+        }
+        for(int i=1;i<count.length;i++) {
+            count[i] = count[i] + count[i-1];
+        }
+        //printArr(arr);
+        //printArr(count);
+        for(int j=arr.length-1;j>=0;j--) {
+            b[count[arr[j]]-1] = arr[j];
+            count[arr[j]] = count[arr[j]]-1;
+        }
+        //printArr(b);
+        return b;
+    }
+    public void printArr(Integer[] arr) {
+        for(int i : arr) {
+            System.out.print(i + " " );
+        }
+        System.out.println("");
+    }
+}

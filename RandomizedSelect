@@ -1,0 +1,108 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+class RandomizedSelect<E extends Comparable> {
+    /**
+        Return the i'th element (as far as order) from the unordered list
+        @param an array of unsorted elements
+        @param i the index of element from the sorted list to return
+    */
+    public E select(ArrayList<E> array, int i) {
+        return randomizedSelect(array, 0, array.size()-1, i);
+    }
+    /**
+        Find the ith element between the indexes p and r in the array
+        @param array - the array from which the selection will take place
+        @param p the starting index of the range of the search
+        @param r the ending index of the range of the search
+        @param i the i'th element to select
+    */
+    private E randomizedSelect(ArrayList<E> array, int p, int r, int i) {
+        //System.out.println("Original");
+        //printArray(array);
+        //System.out.println("P: " + p + " R: " + r + " I:" + i);
+        if(array!=null&&array.size()>0) {
+            if(p==r) {
+                //one element in the list.. return it
+                return array.get(p);
+            } else {
+                int q = randomizedPartition(array,p,r);
+                //System.out.println("Partitioned");
+                //printArray(array);
+                int k = q - p +1;
+                if(i==k) {
+                    //partition is the element
+                    return array.get(q);
+                } else if(i<k) {
+                    //element is in the bottom half of the array
+                    return randomizedSelect(array, p, q-1, i);
+                } else {
+                    //element is in the top half of the array
+                    return randomizedSelect(array, q+1, r,i);
+                }
+            }
+        } else { 
+            return null;
+        }
+    }
+    /**
+        Partition this array 
+        @param array - the array to parition
+        @param p - start index
+        @param r - end index of the range
+        @return q - the index of the partition
+    */
+    private int randomizedPartition(ArrayList<E> array, int p, int r) {
+        int range = r-p;
+        int random = (int)(Math.random()*range) + p;
+        //System.out.println("Random : " + random);
+        swap(array,r,random);
+        return partition(array,p,r);
+    }
+    /**
+        Partition the array in it's natural ordering and return the partition point
+        @param the unsorted array to partition
+        @param the start index of the range
+        @param the end index of the range
+        @return q the index of partition
+    */
+    private int partition(ArrayList<E> array, int p, int r) {
+        E x = array.get(r);
+        int i = p-1;
+        for(int j=p;j<r-1;j++) {
+            E aj = array.get(j);
+            if(aj.compareTo(x)<=0) {
+                i++;
+                swap(array,i,j);
+            }
+        }
+        swap(array,i+1,r);
+        return i+1;
+    }
+    /**
+        Swap the elements in the array 
+        @param array the array to swap elements in
+        @param a the first index
+        @param b the second index
+    */
+    private void swap(ArrayList<E> array, int a, int b) {
+        //System.out.println("Swap " + a + " " + b);
+        if(a==b) 
+            return;
+        E elem = array.get(a), elem2 = array.get(b);
+        array.set(a,elem2);
+        array.set(b,elem);
+    }
+    /**
+        Utility.. print out the array
+        @param array to print
+    */
+    private void printArray(ArrayList<E> array) {
+        for(E elem: array) {
+            System.out.print(elem + " ");
+        }
+        System.out.println("");
+    }
+}
